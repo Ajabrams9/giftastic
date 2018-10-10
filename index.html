@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+
+        
+</head>
+
+<body>
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Script -->
+<script type="text/javascript" src="giftastic.js"></script>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>Giftastic!</h1>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12" id="animal-cards">
+                
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <form id="animal-form">
+                    <label for="animal-input">Add an Animal!</label>
+                    <input type="text" id="animal-input"><br>
+
+
+                    <input id="add-animal" type="submit" value="Submit!">
+                </form>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12" id="animal-images">
+                
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--Styling!-->
+    
+
+
+    <!-- Script -->
+    <script type="text/javascript">
+
+        var rowsReturned = 5;
+
+        function getAnimalGiph(animal, rowsReturned) {
+            
+            var parameter = { 'api_key': "dc6zaTOxFJmzC" };
+            parameter.q = animal;
+            parameter.limit = rowsReturned;
+
+            var queryURL = "https://api.giphy.com/v1/gifs/search";
+            queryURL += "?" + $.param(parameter);
+            console.log(queryURL);
+
+            // Creates AJAX call for the specific movie button being clicked
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+
+                var results = response.data;
+                //for each return result, add divs and add to page.
+                for (i = 0; i < results.length; i++) {
+
+                    var rating = results[i].rating;
+                    var stillImage = results[i].images.fixed_height_still.url;
+                    var animatedImage = results[i].images.fixed_height.url;
+                    //console.log(rating, animatedImage, stillImage);
+
+                    var animalDiv = $("<div>")
+                    var animalImage = $("<img>")
+                    animalImage.addClass("gif");
+                    animalImage.attr("src", stillImage);
+                    animalDiv.append(animalImage);
+
+                    //give the image a still data state        
+                    animalImage.attr("data-state", "still");
+                    animalImage.attr("data-still", stillImage);
+                    animalImage.attr("data-animate", animatedImage);
+
+                    
+                    
+                   //now the rating divs and append.
+                    var animalRating = $("<div>");
+                    animalRating.addClass("rating-class");
+                    animalRating.text(results[i].rating)
+
+                    $("#animal-images").prepend(animalDiv, animalRating);
+
+                    switchState();
+
+                }
+
+
+            });
+
+        }
+
+        //$(document).on("click", ".gif", animateFunction);
+
+
+        function switchState() {
+            $(".gif").on("click", function() {
+
+                var state = $(this).attr('data-state');
+
+                
+                if(state === "still") {
+                    
+                    $(this).attr("src", $(this).data("animate"));
+                    $(this).attr('data-state', "animate");
+                }
+
+                if(state === "animate") {
+                    $(this).attr("src", $(this).data("still"));
+                    $(this).attr('data-state', "still");
+                }
+            })
+        }
+
+
+
+        $("#add-animal").on("click", function (event) {
+
+            event.preventDefault();
+
+            var animalInput = $("#animal-input").val();
+            //console.log(animalInput);
+            var newAnimalDiv = $("<button>");
+            newAnimalDiv.text(animalInput);
+            $("#animal-cards").append(newAnimalDiv);
+            var dataName = newAnimalDiv.attr("data-name", animalInput);
+            //console.log(dataName);
+
+            getAnimalGiph(animalInput);
+
+
+        });
+
+        
+
+        
+
+        
+
+
+    </script>
+</body>
+
+</html>
