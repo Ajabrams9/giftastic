@@ -44,7 +44,9 @@ var animals = ["meow", "dog", "mouse"];
 
         var parameter = { 'api_key': "dc6zaTOxFJmzC" };
             parameter.q = animal;
-            //parameter.limit = rowsReturned;
+            parameter.limit = 10;
+            console.log(parameter);
+            
 
             var queryURL = "https://api.giphy.com/v1/gifs/search";
             queryURL += "?" + $.param(parameter);
@@ -92,31 +94,30 @@ var animals = ["meow", "dog", "mouse"];
  $(document).on("click", ".imageClass", switchState);
 
     function switchState() {
-        //$(".imageClass").on("click", function(){
             
             var state = $(this).attr("data-state");
 
             if(state === "still"){
-                console.log("i am still");
+                //console.log("i am still");
             
                 $(this).attr("src", $(this).attr("data-animate"));
                 $(this).attr("data-state", "animate");
-                console.log($(this).attr("data-state"));
-                console.log($(this).attr("src"));
+                //console.log($(this).attr("data-state"));
+                //console.log($(this).attr("src"));
             
             } 
             if(state === "animate"){
-                console.log("i am animated");
-                //grab the image! and put it's source as the animated...
+                //console.log("i am animated");
+                
                 $(this).attr("src", $(this).attr("data-still"));
                 $(this).attr("data-state", "still");
-                console.log($(this).attr("data-state"));
-                console.log($(this).attr("src"));
+                //console.log($(this).attr("data-state"));
+                //console.log($(this).attr("src"));
                 } 
 
 
             
-        //})
+       
         
     }
 
