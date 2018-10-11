@@ -1,4 +1,4 @@
-var animals = ["kitty", "dog", "mouse"];
+var animals = ["meow", "dog", "mouse"];
     
 
     //This function displays the current array as buttons
@@ -89,32 +89,34 @@ var animals = ["kitty", "dog", "mouse"];
     }
 
 
- //$(document).on("click", ".imageClass", switchState);
+ $(document).on("click", ".imageClass", switchState);
 
     function switchState() {
-        $(".imageClass").on("click", function(){
+        //$(".imageClass").on("click", function(){
             
             var state = $(this).attr("data-state");
 
             if(state === "still"){
-
-                
-                //grab the image! and put it's source as the animated...
+                console.log("i am still");
+            
                 $(this).attr("src", $(this).attr("data-animate"));
                 $(this).attr("data-state", "animate");
+                console.log($(this).attr("data-state"));
+                console.log($(this).attr("src"));
+            
             } 
-
             if(state === "animate"){
-
-                
+                console.log("i am animated");
                 //grab the image! and put it's source as the animated...
                 $(this).attr("src", $(this).attr("data-still"));
                 $(this).attr("data-state", "still");
+                console.log($(this).attr("data-state"));
+                console.log($(this).attr("src"));
                 } 
 
 
             
-        })
+        //})
         
     }
 
