@@ -1,99 +1,125 @@
-        var rowsReturned = 5;
+var animals = ["cat", "dog", "mouse"];
+    
 
-        function getAnimalGiph(animal, rowsReturned) {
+    //This function displays the current array as buttons
+    function renderButtons(){
+
+        $("#animals-view").empty();
+
+        for(i=0; i<animals.length; i++) {
             
-            var parameter = { 'api_key': "dc6zaTOxFJmzC" };
+            var animalButton = $("<button>");
+            animalButton.addClass("animal-button");
+            animalButton.attr("data-name", animals[i]);
+            animalButton.text(animals[i]);
+            $("#animals-view").append(animalButton);
+              
+        }
+
+    }
+
+    renderButtons();
+
+    //This function adds another animal to the array
+    $("#add-animal").on("click", function(){
+        event.preventDefault();
+        
+        var newAnimal = $("#animal-input").val().trim();
+        
+        animals.push(newAnimal);
+
+        renderButtons();
+
+    })
+
+
+    //This function says, when you click a button, display information.
+
+    $(document).on("click", ".animal-button", retrieveData);
+
+    function retrieveData(){
+        
+        var animal = $(this).attr("data-name");
+        
+
+        var parameter = { 'api_key': "dc6zaTOxFJmzC" };
             parameter.q = animal;
-            parameter.limit = rowsReturned;
+            //parameter.limit = rowsReturned;
 
             var queryURL = "https://api.giphy.com/v1/gifs/search";
             queryURL += "?" + $.param(parameter);
-            console.log(queryURL);
 
-            // Creates AJAX call for the specific movie button being clicked
-            $.ajax({
+             $.ajax({
                 url: queryURL,
                 method: "GET"
             }).then(function (response) {
-                console.log(response);
+               
+                results = response.data;
+               
 
-                var results = response.data;
-                //for each return result, add divs and add to page.
-                for (i = 0; i < results.length; i++) {
+                for(i=0; i<results.length;i++){
+                   
+
+                    var animatedAnimalImage = results[i].images.fixed_height.url;
+                    var stillAnimalImage = results[i].images.fixed_height_still.url;
+                    
 
                     var rating = results[i].rating;
-                    var stillImage = results[i].images.fixed_height_still.url;
-                    var animatedImage = results[i].images.fixed_height.url;
-                    //console.log(rating, animatedImage, stillImage);
-
-                    var animalDiv = $("<div>")
-                    var animalImage = $("<img>")
-                    animalImage.addClass("gif");
-                    animalImage.attr("src", stillImage);
-                    animalDiv.append(animalImage);
-
-                    //give the image a still data state        
-                    animalImage.attr("data-state", "still");
-                    animalImage.attr("data-still", stillImage);
-                    animalImage.attr("data-animate", animatedImage);
-
                     
-                    
-                   //now the rating divs and append.
-                    var animalRating = $("<div>");
-                    animalRating.addClass("rating-class");
-                    animalRating.text(results[i].rating)
+                    newPTag = $("<p>");
+                    newPTag.text(rating);
 
-                    $("#animal-images").prepend(animalDiv, animalRating);
+                    var newAnimalBiggerDiv = $("<div>")
+                    var newAnimalDiv = $("<img>");
+                    newAnimalDiv.addClass("imageClass");
+                    newAnimalDiv.attr("src", stillAnimalImage);
+                    newAnimalBiggerDiv.append(newAnimalDiv, newPTag);
+                    $("#test").prepend(newAnimalBiggerDiv);
 
+                    newAnimalDiv.attr("data-state", "still");
+                    newAnimalDiv.attr("data-still", stillAnimalImage);
+                    newAnimalDiv.attr("data-animate", animatedAnimalImage);
+                   
                     switchState();
 
+
                 }
+          
+            })
+    }
 
 
-            });
+ //$(document).on("click", ".imageClass", switchState);
 
-        }
+    function switchState() {
+        $(".imageClass").on("click", function(){
+            
+            var state = $(this).attr("data-state");
 
-        //$(document).on("click", ".gif", animateFunction);
-
-
-        function switchState() {
-            $(".gif").on("click", function() {
-
-                var state = $(this).attr('data-state');
+            if(state === "still"){
 
                 
-                if(state === "still") {
-                    
-                    $(this).attr("src", $(this).data("animate"));
-                    $(this).attr('data-state', "animate");
-                }
+                //grab the image! and put it's source as the animated...
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+            } 
 
-                if(state === "animate") {
-                    $(this).attr("src", $(this).data("still"));
-                    $(this).attr('data-state', "still");
-                }
-            })
-        }
+            if(state === "animate"){
 
-
-
-        $("#add-animal").on("click", function (event) {
-
-            event.preventDefault();
-
-            var animalInput = $("#animal-input").val();
-            //console.log(animalInput);
-            var newAnimalDiv = $("<button>");
-            newAnimalDiv.text(animalInput);
-            $("#animal-cards").append(newAnimalDiv);
-            var dataName = newAnimalDiv.attr("data-name", animalInput);
-            //console.log(dataName);
-
-            getAnimalGiph(animalInput);
+                
+                //grab the image! and put it's source as the animated...
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+                } 
 
 
-        });
+            
+        })
+        
+    }
 
-     
+
+
+    
+
+    
