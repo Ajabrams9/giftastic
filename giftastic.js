@@ -1,4 +1,4 @@
-var animals = ["cat", "dog", "mouse"];
+var animals = ["kitty", "dog", "mouse"];
     
 
     //This function displays the current array as buttons
